@@ -36,6 +36,7 @@
 #include <Adafruit_Sensor.h>  // https://github.com/adafruit/Adafruit_Sensor
 #include <DHT.h>              // https://github.com/adafruit/DHT-sensor-library
 #include <EspMQTTClient.h>    // https://github.com/plapointe6/EspMQTTClient - Library must be patched with https://github.com/plapointe6/EspMQTTClient/pull/138
+#include "time.h"
 #include <arduino_secrets.h>
 
 #define DHT_PIN A0            // Digital pin connected to the DHT sensor
@@ -312,6 +313,14 @@ void setup()
 void onConnectionEstablished()
 {
   client.subscribe("iot/flipdisc", [](const String & payload) {
+
+    if (payload == "Temperature") {
+      DisplayTemperature();
+      return;
+    } else if (payload == "Humidity") {
+      DisplayHumidity();
+      return;
+    }
 
     String word = payload;
     Serial.println("Displaying word: " + word);
